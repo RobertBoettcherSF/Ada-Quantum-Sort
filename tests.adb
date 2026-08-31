@@ -32,19 +32,23 @@ begin
    -- TEST 2 — Single Element Array
    Put_Line ("TEST 2 — Single Element Array");
    declare
-      Single_Arr : Element_Array := (1 => 42);
+      Single_Arr : constant Element_Array := [1 => 42];
    begin
       Check ("2.1 Single element array is sorted", Is_Sorted (Single_Arr));
-      Sort_Frequency (Single_Arr);
-      Check ("2.2 Frequency sort preserves single element", Single_Arr (1) = 42);
-      Sort_Space_Bounded (Single_Arr);
-      Check ("2.3 Space bounded sort preserves single element", Single_Arr (1) = 42);
+      declare
+         Mutable_Arr : Element_Array := Single_Arr;
+      begin
+         Sort_Frequency (Mutable_Arr);
+         Check ("2.2 Frequency sort preserves single element", Mutable_Arr (1) = 42);
+         Sort_Space_Bounded (Mutable_Arr);
+         Check ("2.3 Space bounded sort preserves single element", Mutable_Arr (1) = 42);
+      end;
    end;
 
    -- TEST 3 — Comparison Sort with Unsorted Data
    Put_Line ("TEST 3 — Comparison Sort with Unsorted Data");
    declare
-      Arr : Element_Array := (5, 2, 9, 1, 7);
+      Arr : Element_Array := [5, 2, 9, 1, 7];
    begin
       Check ("3.1 Array is initially unsorted", not Is_Sorted (Arr));
       Sort_Comparison (Arr);
@@ -55,7 +59,7 @@ begin
    -- TEST 4 — Parallel Network Sort with Unsorted Data
    Put_Line ("TEST 4 — Parallel Network Sort with Unsorted Data");
    declare
-      Arr : Element_Array := (20, 15, 10, 5, 0, -5);
+      Arr : Element_Array := [20, 15, 10, 5, 0, -5];
    begin
       Check ("4.1 Array is initially unsorted", not Is_Sorted (Arr));
       Sort_Parallel_Network (Arr);
@@ -66,7 +70,7 @@ begin
    -- TEST 5 — Frequency Sort with Unsorted Data
    Put_Line ("TEST 5 — Frequency Sort with Unsorted Data");
    declare
-      Arr : Element_Array := (3, 1, 4, 1, 5, 9, 2, 6);
+      Arr : Element_Array := [3, 1, 4, 1, 5, 9, 2, 6];
    begin
       Check ("5.1 Array is initially unsorted", not Is_Sorted (Arr));
       Sort_Frequency (Arr);
@@ -77,7 +81,7 @@ begin
    -- TEST 6 — Space Bounded Sort with Unsorted Data
    Put_Line ("TEST 6 — Space Bounded Sort with Unsorted Data");
    declare
-      Arr : Element_Array := (8, 3, 5, 1, 9, 6);
+      Arr : Element_Array := [8, 3, 5, 1, 9, 6];
    begin
       Check ("6.1 Array is initially unsorted", not Is_Sorted (Arr));
       Sort_Space_Bounded (Arr);
@@ -88,8 +92,8 @@ begin
    -- TEST 7 — Duplicate Elements Handling across Variants
    Put_Line ("TEST 7 — Duplicate Elements Handling");
    declare
-      Arr1 : Element_Array := (4, 2, 4, 1, 2, 1);
-      Arr2 : Element_Array := (4, 2, 4, 1, 2, 1);
+      Arr1 : Element_Array := [4, 2, 4, 1, 2, 1];
+      Arr2 : Element_Array := [4, 2, 4, 1, 2, 1];
    begin
       Sort_Comparison (Arr1);
       Sort_Frequency (Arr2);
@@ -101,7 +105,7 @@ begin
    -- TEST 8 — Negative Numbers Sorting
    Put_Line ("TEST 8 — Negative Numbers Sorting");
    declare
-      Arr : Element_Array := (-3, 15, -10, 0, 8, -5);
+      Arr : Element_Array := [-3, 15, -10, 0, 8, -5];
    begin
       Sort_Parallel_Network (Arr);
       Check ("8.1 Parallel network handles negative numbers", Is_Sorted (Arr));
@@ -112,7 +116,7 @@ begin
    -- TEST 9 — Already Sorted Array Invariant
    Put_Line ("TEST 9 — Already Sorted Array Invariant");
    declare
-      Arr : Element_Array := (1, 2, 3, 4, 5, 6);
+      Arr : Element_Array := [1, 2, 3, 4, 5, 6];
    begin
       Check ("9.1 Array is recognized as already sorted", Is_Sorted (Arr));
       Sort_Comparison (Arr);
@@ -123,7 +127,7 @@ begin
    -- TEST 10 — Reverse Sorted Array
    Put_Line ("TEST 10 — Reverse Sorted Array");
    declare
-      Arr : Element_Array := (10, 8, 6, 4, 2, 0);
+      Arr : Element_Array := [10, 8, 6, 4, 2, 0];
    begin
       Check ("10.1 Reverse sorted array is not sorted", not Is_Sorted (Arr));
       Sort_Space_Bounded (Arr);
@@ -134,9 +138,9 @@ begin
    -- TEST 11 — Is_Sorted Function Robustness
    Put_Line ("TEST 11 — Is_Sorted Function Robustness");
    declare
-      Sorted_Arr   : Element_Array := (10, 20, 30, 40);
-      Unsorted_Arr : Element_Array := (10, 30, 20, 40);
-      Flat_Arr     : Element_Array := (5, 5, 5, 5);
+      Sorted_Arr   : constant Element_Array := [10, 20, 30, 40];
+      Unsorted_Arr : constant Element_Array := [10, 30, 20, 40];
+      Flat_Arr     : constant Element_Array := [5, 5, 5, 5];
    begin
       Check ("11.1 Strictly non-decreasing sorted array returns True", Is_Sorted (Sorted_Arr));
       Check ("11.2 Unsorted array returns False", not Is_Sorted (Unsorted_Arr));
@@ -146,7 +150,7 @@ begin
    -- TEST 12 — Large Range Element_Value Test
    Put_Line ("TEST 12 — Large Range Element_Value Test");
    declare
-      Arr : Element_Array := (-9999, 5000, -5000, 9999, 0);
+      Arr : Element_Array := [-9999, 5000, -5000, 9999, 0];
    begin
       Sort_Frequency (Arr);
       Check ("12.1 Frequency sort handles extreme range values", Is_Sorted (Arr));
@@ -157,7 +161,7 @@ begin
    -- TEST 13 — Comprehensive Multi-Variant Consistency Test
    Put_Line ("TEST 13 — Comprehensive Multi-Variant Consistency Test");
    declare
-      Base_Arr : Element_Array := (42, -7, 13, 0, 99, -42, 13, 5);
+      Base_Arr : constant Element_Array := [42, -7, 13, 0, 99, -42, 13, 5];
       Arr_A    : Element_Array := Base_Arr;
       Arr_B    : Element_Array := Base_Arr;
       Arr_C    : Element_Array := Base_Arr;
