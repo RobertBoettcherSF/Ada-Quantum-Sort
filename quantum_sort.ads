@@ -8,7 +8,7 @@
 package Quantum_Sort is
 
    type Element_Value is range -10_000 .. 10_000;
-   type Index_Type is range <>;
+   type Index_Type is range 1 .. 10_000;
    type Element_Array is array (Index_Type range <>) of Element_Value;
 
    --  Exception raised for invalid input parameters or constraints
